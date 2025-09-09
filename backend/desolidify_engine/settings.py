@@ -60,11 +60,10 @@ _PARAM_RANGES = {
 
 
 def _clamp(v, lo=None, hi=None, *, min=None, max=None, **kwargs):
-    """Clamp ``v`` between lower/upper bounds.
+    """Clamp v between lower/upper bounds.
 
-    Supports both positional ``lo``/``hi`` and keyword ``min``/``max`` styles,
-    so callers can unpack dictionaries with those keys (as ``_PARAM_RANGES``
-    does).
+    Supports both (lo, hi) and (min=..., max=...) calling styles so callers can
+    unpack dictionaries with either key format.
     """
     if lo is None:
         lo = min
