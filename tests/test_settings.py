@@ -23,4 +23,5 @@ def test_clamp():
 def test_coerce_and_clamp_params():
     params = {"spacing": 0}
     out = coerce_and_clamp_params(params)
+    # spacing must be clamped to the minimum defined in PARAM_SPECS
     assert out["spacing"] >= 8.0

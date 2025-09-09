@@ -1302,7 +1302,7 @@ var require_react_dom_development = __commonJS({
         return dispatcher;
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var React2 = require_react(), Internals = {
+      var React8 = require_react(), Internals = {
         d: {
           f: noop,
           r: function() {
@@ -1320,7 +1320,7 @@ var require_react_dom_development = __commonJS({
         },
         p: 0,
         findDOMNode: null
-      }, REACT_PORTAL_TYPE = Symbol.for("react.portal"), ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
+      }, REACT_PORTAL_TYPE = Symbol.for("react.portal"), ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
       "function" === typeof Map && null != Map.prototype && "function" === typeof Map.prototype.forEach && "function" === typeof Set && null != Set.prototype && "function" === typeof Set.prototype.clear && "function" === typeof Set.prototype.forEach || console.error(
         "React depends on Map and Set built-in types. Make sure that you load a polyfill in older browsers. https://reactjs.org/link/react-polyfills"
       );
@@ -2862,7 +2862,7 @@ var require_react_dom_client_development = __commonJS({
         "number" === type && getActiveElement(node.ownerDocument) === node || node.defaultValue === "" + value || (node.defaultValue = "" + value);
       }
       function validateOptionProps(element, props) {
-        null == props.value && ("object" === typeof props.children && null !== props.children ? React2.Children.forEach(props.children, function(child) {
+        null == props.value && ("object" === typeof props.children && null !== props.children ? React8.Children.forEach(props.children, function(child) {
           null == child || "string" === typeof child || "number" === typeof child || "bigint" === typeof child || didWarnInvalidChild || (didWarnInvalidChild = true, console.error(
             "Cannot infer the option value of complex children. Pass a `value` prop or use a plain string as children to <option>."
           ));
@@ -16444,14 +16444,14 @@ var require_react_dom_client_development = __commonJS({
         ));
       }
       "undefined" !== typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ && "function" === typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart && __REACT_DEVTOOLS_GLOBAL_HOOK__.registerInternalModuleStart(Error());
-      var Scheduler = require_scheduler(), React2 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = Symbol.for("react.element"), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_PROVIDER_TYPE = Symbol.for("react.provider"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy");
+      var Scheduler = require_scheduler(), React8 = require_react(), ReactDOM = require_react_dom(), assign = Object.assign, REACT_LEGACY_ELEMENT_TYPE = Symbol.for("react.element"), REACT_ELEMENT_TYPE = Symbol.for("react.transitional.element"), REACT_PORTAL_TYPE = Symbol.for("react.portal"), REACT_FRAGMENT_TYPE = Symbol.for("react.fragment"), REACT_STRICT_MODE_TYPE = Symbol.for("react.strict_mode"), REACT_PROFILER_TYPE = Symbol.for("react.profiler"), REACT_PROVIDER_TYPE = Symbol.for("react.provider"), REACT_CONSUMER_TYPE = Symbol.for("react.consumer"), REACT_CONTEXT_TYPE = Symbol.for("react.context"), REACT_FORWARD_REF_TYPE = Symbol.for("react.forward_ref"), REACT_SUSPENSE_TYPE = Symbol.for("react.suspense"), REACT_SUSPENSE_LIST_TYPE = Symbol.for("react.suspense_list"), REACT_MEMO_TYPE = Symbol.for("react.memo"), REACT_LAZY_TYPE = Symbol.for("react.lazy");
       Symbol.for("react.scope");
       var REACT_ACTIVITY_TYPE = Symbol.for("react.activity");
       Symbol.for("react.legacy_hidden");
       Symbol.for("react.tracing_marker");
       var REACT_MEMO_CACHE_SENTINEL = Symbol.for("react.memo_cache_sentinel");
       Symbol.for("react.view_transition");
-      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React2.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
+      var MAYBE_ITERATOR_SYMBOL = Symbol.iterator, REACT_CLIENT_REFERENCE = Symbol.for("react.client.reference"), isArrayImpl = Array.isArray, ReactSharedInternals = React8.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ReactDOMSharedInternals = ReactDOM.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, NotPending = Object.freeze({
         pending: false,
         data: null,
         method: null,
@@ -19173,7 +19173,7 @@ var require_react_dom_client_development = __commonJS({
         }
       };
       (function() {
-        var isomorphicReactPackageVersion = React2.version;
+        var isomorphicReactPackageVersion = React8.version;
         if ("19.1.1" !== isomorphicReactPackageVersion)
           throw Error(
             'Incompatible React versions: The "react" and "react-dom" packages must have the exact same version. Instead got:\n  - react:      ' + (isomorphicReactPackageVersion + "\n  - react-dom:  19.1.1\nLearn more: https://react.dev/warnings/version-mismatch")
@@ -19313,25 +19313,777 @@ var require_client = __commonJS({
   }
 });
 
-// src/App.jsx
-function App() {
-  return /* @__PURE__ */ import_react.default.createElement("h1", { style: { color: "white" } }, "Hello World from App");
+// src/api.js
+async function jsonFetch(path, options = {}) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    headers: {
+      ...options.body instanceof FormData ? {} : { "Content-Type": "application/json" },
+      ...options.headers || {}
+    },
+    ...options
+  });
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try {
+      const data = await res.json();
+      if (data && data.error) msg = data.error;
+    } catch {
+    }
+    throw new Error(msg);
+  }
+  const ct = res.headers.get("content-type") || "";
+  if (ct.includes("application/json")) {
+    return res.json();
+  }
+  return res.arrayBuffer();
+}
+async function getParamSpec() {
+  return jsonFetch("/meta/params");
+}
+async function getPresets() {
+  return jsonFetch("/meta/presets");
+}
+async function createJob(file, params = {}, presetName) {
+  const fd = new FormData();
+  fd.append("file", file, file?.name || "model.stl");
+  if (params && typeof params === "object") {
+    fd.append("params", JSON.stringify(params));
+  }
+  if (presetName) fd.append("preset", String(presetName));
+  return jsonFetch("/jobs", { method: "POST", body: fd });
+}
+async function getJobStatus(jobId) {
+  return jsonFetch(`/jobs/${encodeURIComponent(jobId)}`, { method: "GET" });
+}
+async function fetchJobResultBlob(jobId) {
+  const res = await fetch(
+    `${API_BASE}/jobs/${encodeURIComponent(jobId)}/result`,
+    { method: "GET" }
+  );
+  if (res.status === 202) {
+    const data = await res.json();
+    const msg = data?.error || data?.message || "Result not ready";
+    throw new Error(msg);
+  }
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.blob();
+}
+async function runPreview(file, params = {}) {
+  const fd = new FormData();
+  fd.append("file", file, file?.name || "model.stl");
+  fd.append("params", JSON.stringify({ ...params, fast: 2 }));
+  const res = await fetch(`${API_BASE}/preview`, { method: "POST", body: fd });
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try {
+      const j = await res.json();
+      msg = j?.error || msg;
+    } catch {
+    }
+    throw new Error(msg);
+  }
+  return res.blob();
+}
+var RUNTIME, API_BASE;
+var init_api = __esm({
+  "src/api.js"() {
+    RUNTIME = typeof window !== "undefined" && window.__DESOLIDIFY__ || {};
+    API_BASE = RUNTIME.apiBase || "/api";
+  }
+});
+
+// src/components/UploadPanel.jsx
+function UploadPanel({
+  file,
+  onFileSelected,
+  onStartPreview,
+  onStartJob,
+  disabled
+}) {
+  const inputRef = (0, import_react.useRef)(null);
+  const [dragOver, setDragOver] = (0, import_react.useState)(false);
+  const openPicker = (0, import_react.useCallback)(() => {
+    inputRef.current?.click();
+  }, []);
+  const onChange = (0, import_react.useCallback)(
+    (e) => {
+      const f = e.target.files?.[0];
+      if (f) onFileSelected(f);
+    },
+    [onFileSelected]
+  );
+  const onDrop = (0, import_react.useCallback)(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragOver(false);
+      const f = e.dataTransfer.files?.[0];
+      if (f) onFileSelected(f);
+    },
+    [onFileSelected]
+  );
+  const onDrag = (0, import_react.useCallback)((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === "dragenter" || e.type === "dragover") setDragOver(true);
+    if (e.type === "dragleave") setDragOver(false);
+  }, []);
+  function prettySize(n) {
+    if (!Number.isFinite(n)) return "\u2014";
+    const u = ["B", "KB", "MB", "GB"];
+    let i = 0;
+    while (n >= 1024 && i < u.length - 1) {
+      n /= 1024;
+      i++;
+    }
+    return `${n.toFixed(1)} ${u[i]}`;
+  }
+  return /* @__PURE__ */ import_react.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react.default.createElement("h3", { className: "card-title" }, "Upload STL"), /* @__PURE__ */ import_react.default.createElement(
+    "div",
+    {
+      className: "uploader",
+      onDragEnter: onDrag,
+      onDragOver: onDrag,
+      onDragLeave: onDrag,
+      onDrop,
+      style: {
+        border: "1px dashed var(--border)",
+        borderRadius: 12,
+        padding: 16,
+        background: dragOver ? "#191c2b" : "#141726",
+        cursor: "pointer"
+      },
+      onClick: openPicker
+    },
+    /* @__PURE__ */ import_react.default.createElement(
+      "input",
+      {
+        ref: inputRef,
+        type: "file",
+        accept: ".stl,model/stl",
+        onChange,
+        hidden: true
+      }
+    ),
+    !file ? /* @__PURE__ */ import_react.default.createElement("div", { style: { textAlign: "center", color: "var(--muted)" } }, /* @__PURE__ */ import_react.default.createElement("div", { style: { fontSize: 13, marginBottom: 6 } }, "Drag & drop an ", /* @__PURE__ */ import_react.default.createElement("strong", null, ".stl"), " file here"), /* @__PURE__ */ import_react.default.createElement("div", { style: { fontSize: 12 } }, "or click to browse")) : /* @__PURE__ */ import_react.default.createElement("div", { className: "kv" }, /* @__PURE__ */ import_react.default.createElement("div", null, "File"), /* @__PURE__ */ import_react.default.createElement("div", { style: { textAlign: "right" } }, file.name), /* @__PURE__ */ import_react.default.createElement("div", null, "Size"), /* @__PURE__ */ import_react.default.createElement("div", { style: { textAlign: "right" } }, prettySize(file.size)), /* @__PURE__ */ import_react.default.createElement("div", null, "Type"), /* @__PURE__ */ import_react.default.createElement("div", { style: { textAlign: "right" } }, file.type || "model/stl"))
+  ), /* @__PURE__ */ import_react.default.createElement("div", { className: "controls", style: { marginTop: 10 } }, /* @__PURE__ */ import_react.default.createElement(
+    "button",
+    {
+      className: "btn secondary",
+      onClick: () => onFileSelected(null),
+      disabled: !file,
+      type: "button"
+    },
+    "Remove"
+  ), /* @__PURE__ */ import_react.default.createElement("div", { style: { flex: 1 } }), /* @__PURE__ */ import_react.default.createElement(
+    "button",
+    {
+      className: "btn",
+      onClick: onStartPreview,
+      disabled: !file || disabled,
+      type: "button"
+    },
+    "Preview"
+  ), /* @__PURE__ */ import_react.default.createElement(
+    "button",
+    {
+      className: "btn primary",
+      onClick: onStartJob,
+      disabled: !file || disabled,
+      type: "button"
+    },
+    "Process"
+  )), /* @__PURE__ */ import_react.default.createElement("p", { style: { marginTop: 8, fontSize: 12, color: "var(--muted)" } }, "Tip: Models work best when manifold and roughly millimeter scale. Max upload defaults to 100\xA0MB."));
 }
 var import_react;
+var init_UploadPanel = __esm({
+  "src/components/UploadPanel.jsx"() {
+    import_react = __toESM(require_react());
+  }
+});
+
+// src/components/PresetSelect.jsx
+function PresetSelect({ presets = {}, value, onChange }) {
+  const names = Object.keys(presets || {});
+  return /* @__PURE__ */ import_react2.default.createElement("div", { className: "row" }, /* @__PURE__ */ import_react2.default.createElement(
+    "select",
+    {
+      className: "input",
+      value: value || "",
+      onChange: (e) => onChange?.(e.target.value)
+    },
+    !value && /* @__PURE__ */ import_react2.default.createElement("option", { value: "" }, "\u2014 Select a preset \u2014"),
+    names.map((n) => /* @__PURE__ */ import_react2.default.createElement("option", { key: n, value: n }, n))
+  ));
+}
+var import_react2;
+var init_PresetSelect = __esm({
+  "src/components/PresetSelect.jsx"() {
+    import_react2 = __toESM(require_react());
+  }
+});
+
+// src/components/Tooltip.jsx
+function Tooltip({ text }) {
+  if (!text) return null;
+  return /* @__PURE__ */ import_react3.default.createElement(
+    "span",
+    {
+      title: text,
+      "aria-label": text,
+      style: {
+        display: "inline-block",
+        marginLeft: 6,
+        color: "var(--muted)",
+        background: "#2a2e45",
+        borderRadius: 6,
+        padding: "0 6px",
+        fontSize: 10,
+        lineHeight: "16px",
+        verticalAlign: "middle"
+      }
+    },
+    "?"
+  );
+}
+var import_react3;
+var init_Tooltip = __esm({
+  "src/components/Tooltip.jsx"() {
+    import_react3 = __toESM(require_react());
+  }
+});
+
+// src/components/ParamSliders.jsx
+function NumRow({ k, spec, value, onChange }) {
+  const step = spec.step ?? (spec.type === "integer" ? 1 : 0.1);
+  const min = spec.min ?? 0;
+  const max = spec.max ?? 100;
+  const v = value ?? spec.default ?? min;
+  return /* @__PURE__ */ import_react4.default.createElement("div", { style: { marginBottom: 10 } }, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row", style: { justifyContent: "space-between" } }, /* @__PURE__ */ import_react4.default.createElement("label", { htmlFor: `param-${k}`, style: { fontSize: 12 } }, k, " ", /* @__PURE__ */ import_react4.default.createElement(Tooltip, { text: spec.tip })), /* @__PURE__ */ import_react4.default.createElement(
+    "input",
+    {
+      className: "input",
+      style: { width: 110, textAlign: "right" },
+      id: `param-${k}-num`,
+      type: "number",
+      step,
+      min,
+      max,
+      value: v ?? "",
+      onChange: (e) => onChange({ [k]: e.target.value === "" ? null : Number(e.target.value) })
+    }
+  )), /* @__PURE__ */ import_react4.default.createElement(
+    "input",
+    {
+      id: `param-${k}`,
+      type: "range",
+      min,
+      max,
+      step,
+      value: Number.isFinite(v) ? v : min,
+      onChange: (e) => onChange({ [k]: Number(e.target.value) }),
+      style: { width: "100%" }
+    }
+  ));
+}
+function BoolRow({ k, spec, value, onChange }) {
+  const v = !!(value ?? spec.default);
+  return /* @__PURE__ */ import_react4.default.createElement("div", { className: "row", style: { marginBottom: 10 } }, /* @__PURE__ */ import_react4.default.createElement("label", { htmlFor: `param-${k}`, style: { fontSize: 12 } }, k, " ", /* @__PURE__ */ import_react4.default.createElement(Tooltip, { text: spec.tip })), /* @__PURE__ */ import_react4.default.createElement("div", { style: { flex: 1 } }), /* @__PURE__ */ import_react4.default.createElement(
+    "input",
+    {
+      id: `param-${k}`,
+      type: "checkbox",
+      checked: v,
+      onChange: (e) => onChange({ [k]: !!e.target.checked })
+    }
+  ));
+}
+function SelectRow({ k, spec, value, onChange }) {
+  const v = (value ?? spec.default) || "";
+  return /* @__PURE__ */ import_react4.default.createElement("div", { className: "row", style: { marginBottom: 10 } }, /* @__PURE__ */ import_react4.default.createElement("label", { htmlFor: `param-${k}`, style: { fontSize: 12 } }, k, " ", /* @__PURE__ */ import_react4.default.createElement(Tooltip, { text: spec.tip })), /* @__PURE__ */ import_react4.default.createElement("div", { style: { flex: 1 } }), /* @__PURE__ */ import_react4.default.createElement(
+    "select",
+    {
+      id: `param-${k}`,
+      className: "input",
+      style: { width: 180 },
+      value: v,
+      onChange: (e) => onChange({ [k]: e.target.value })
+    },
+    (spec.choices || []).map((c) => /* @__PURE__ */ import_react4.default.createElement("option", { key: c, value: c }, c))
+  ));
+}
+function ParamSliders({ specs = {}, values = {}, onChange }) {
+  const [showAdvanced, setShowAdvanced] = (0, import_react4.useState)(false);
+  const entries = (0, import_react4.useMemo)(() => Object.entries(specs), [specs]);
+  const mainKeys = (0, import_react4.useMemo)(
+    () => entries.map(([k]) => k).filter((k) => !["chunk", "mem_delay", "mem_tries"].includes(k)),
+    [entries]
+  );
+  const advancedKeys = (0, import_react4.useMemo)(
+    () => ["chunk", "mem_delay", "mem_tries"].filter((k) => specs[k]),
+    [specs]
+  );
+  const renderRow = (k) => {
+    const spec = specs[k] || {};
+    const type = spec.type || "number";
+    const v = values[k];
+    if (type === "bool") return /* @__PURE__ */ import_react4.default.createElement(BoolRow, { key: k, k, spec, value: v, onChange });
+    if (type === "select") return /* @__PURE__ */ import_react4.default.createElement(SelectRow, { key: k, k, spec, value: v, onChange });
+    return /* @__PURE__ */ import_react4.default.createElement(NumRow, { key: k, k, spec, value: v, onChange });
+  };
+  return /* @__PURE__ */ import_react4.default.createElement("div", null, mainKeys.map(renderRow), advancedKeys.length > 0 && /* @__PURE__ */ import_react4.default.createElement(import_react4.default.Fragment, null, /* @__PURE__ */ import_react4.default.createElement("div", { className: "row", style: { marginTop: 6, marginBottom: 6 } }, /* @__PURE__ */ import_react4.default.createElement("div", { style: { fontSize: 12, color: "var(--muted)" } }, "Advanced"), /* @__PURE__ */ import_react4.default.createElement("div", { style: { flex: 1 } }), /* @__PURE__ */ import_react4.default.createElement(
+    "button",
+    {
+      className: "btn ghost",
+      type: "button",
+      onClick: () => setShowAdvanced((s) => !s)
+    },
+    showAdvanced ? "Hide" : "Show"
+  )), showAdvanced && advancedKeys.map(renderRow)));
+}
+var import_react4;
+var init_ParamSliders = __esm({
+  "src/components/ParamSliders.jsx"() {
+    import_react4 = __toESM(require_react());
+    init_Tooltip();
+  }
+});
+
+// src/components/Preview3D.jsx
+function Preview3D({ beforeUrl = null, afterUrl = null }) {
+  const mountRef = (0, import_react5.useRef)(null);
+  const stateRef = (0, import_react5.useRef)({
+    renderer: null,
+    scene: null,
+    camera: null,
+    mesh: null,
+    anim: 0,
+    width: 0,
+    height: 0,
+    three: null,
+    STLLoader: null,
+    root: null
+  });
+  const [ready, setReady] = (0, import_react5.useState)(false);
+  (0, import_react5.useEffect)(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const three = await import("/vendor/three/three.module.js");
+        const STL = await import("/vendor/three/STLLoader.js");
+        if (!mounted) return;
+        stateRef.current.three = three;
+        stateRef.current.STLLoader = STL.STLLoader || STL.default?.STLLoader || STL.default || STL;
+        setReady(true);
+      } catch (e) {
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+  (0, import_react5.useEffect)(() => {
+    if (!ready || !mountRef.current) return;
+    const S = stateRef.current;
+    if (S.renderer) return;
+    const THREE = S.three;
+    const el = mountRef.current;
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+    renderer.setClearColor(0, 0);
+    el.appendChild(renderer.domElement);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1e4);
+    camera.position.set(100, 120, 160);
+    const root = new THREE.Group();
+    scene.add(root);
+    const amb = new THREE.AmbientLight(16777215, 0.6);
+    scene.add(amb);
+    const dir = new THREE.DirectionalLight(16777215, 0.8);
+    dir.position.set(1, 1.2, 0.7).multiplyScalar(200);
+    scene.add(dir);
+    S.renderer = renderer;
+    S.scene = scene;
+    S.camera = camera;
+    S.root = root;
+    const resize = () => {
+      const rect = el.getBoundingClientRect();
+      const w = Math.max(10, rect.width | 0);
+      const h = Math.max(10, rect.height | 0);
+      if (w === S.width && h === S.height) return;
+      S.width = w;
+      S.height = h;
+      renderer.setSize(w, h, false);
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+    };
+    resize();
+    S._onResize = resize;
+    window.addEventListener("resize", resize);
+    const animate = () => {
+      S.anim = requestAnimationFrame(animate);
+      renderer.render(scene, camera);
+    };
+    animate();
+    let dragging = false;
+    let lx = 0, ly = 0;
+    const onDown = (e) => {
+      dragging = true;
+      lx = e.clientX;
+      ly = e.clientY;
+    };
+    const onUp = () => {
+      dragging = false;
+    };
+    const onMove = (e) => {
+      if (!dragging || !S.root) return;
+      const dx = (e.clientX - lx) * 5e-3;
+      const dy = (e.clientY - ly) * 5e-3;
+      S.root.rotation.y += dx;
+      S.root.rotation.x += dy;
+      lx = e.clientX;
+      ly = e.clientY;
+    };
+    el.addEventListener("mousedown", onDown);
+    window.addEventListener("mouseup", onUp);
+    window.addEventListener("mousemove", onMove);
+    return () => {
+      window.removeEventListener("resize", resize);
+      el.removeEventListener("mousedown", onDown);
+      window.removeEventListener("mouseup", onUp);
+      window.removeEventListener("mousemove", onMove);
+      if (S.anim) cancelAnimationFrame(S.anim);
+      if (S.renderer) {
+        try {
+          S.renderer.dispose();
+        } catch {
+        }
+        try {
+          el.removeChild(S.renderer.domElement);
+        } catch {
+        }
+      }
+      S.renderer = null;
+      S.scene = null;
+      S.camera = null;
+      S.root = null;
+    };
+  }, [ready]);
+  (0, import_react5.useEffect)(() => {
+    const url = afterUrl || beforeUrl;
+    const S = stateRef.current;
+    if (!ready || !url || !S.three || !S.STLLoader || !S.root) {
+      if (S.mesh && S.root) {
+        S.root.remove(S.mesh);
+        S.mesh.geometry?.dispose?.();
+        S.mesh.material?.dispose?.();
+        S.mesh = null;
+      }
+      return;
+    }
+    let canceled = false;
+    const THREE = S.three;
+    const loader = new S.STLLoader();
+    loader.load(
+      url,
+      (geom) => {
+        if (canceled) return;
+        if (S.mesh && S.root) {
+          S.root.remove(S.mesh);
+          S.mesh.geometry?.dispose?.();
+          S.mesh.material?.dispose?.();
+          S.mesh = null;
+        }
+        const geometry = geom.isBufferGeometry ? geom : new THREE.BufferGeometry().fromGeometry(geom);
+        geometry.computeVertexNormals();
+        const mat = new THREE.MeshStandardMaterial({
+          color: afterUrl ? 6989823 : 11184810,
+          roughness: 0.6,
+          metalness: 0.05
+        });
+        const mesh = new THREE.Mesh(geometry, mat);
+        S.root.add(mesh);
+        S.mesh = mesh;
+        geometry.computeBoundingBox();
+        const bb = geometry.boundingBox;
+        const size = new THREE.Vector3();
+        bb.getSize(size);
+        const center = new THREE.Vector3();
+        bb.getCenter(center);
+        mesh.position.sub(center);
+        const maxDim = Math.max(size.x, size.y, size.z) || 1;
+        const dist = maxDim * 2.2;
+        S.camera.position.set(dist, dist * 0.9, dist * 1.2);
+        S.camera.near = Math.max(0.01, dist / 100);
+        S.camera.far = dist * 10;
+        S.camera.lookAt(0, 0, 0);
+        S.camera.updateProjectionMatrix();
+      },
+      void 0,
+      () => {
+      }
+    );
+    return () => {
+      canceled = true;
+    };
+  }, [beforeUrl, afterUrl, ready]);
+  return /* @__PURE__ */ import_react5.default.createElement(
+    "div",
+    {
+      ref: mountRef,
+      style: {
+        width: "100%",
+        height: 300,
+        background: "linear-gradient(180deg, rgba(17,18,24,0.8), rgba(12,14,20,0.8))"
+      }
+    },
+    !ready && /* @__PURE__ */ import_react5.default.createElement("div", { style: { padding: 12, color: "var(--muted)", fontSize: 12 } }, "Viewer initializing\u2026")
+  );
+}
+var import_react5;
+var init_Preview3D = __esm({
+  "src/components/Preview3D.jsx"() {
+    import_react5 = __toESM(require_react());
+  }
+});
+
+// src/components/ProgressBar.jsx
+function ProgressBar({ value = 0 }) {
+  const pct = Math.max(0, Math.min(1, Number.isFinite(value) ? value : 0));
+  return /* @__PURE__ */ import_react6.default.createElement(
+    "div",
+    {
+      style: {
+        width: "100%",
+        height: 10,
+        borderRadius: 999,
+        background: "#1b1e2c",
+        border: "1px solid var(--border)",
+        overflow: "hidden"
+      },
+      "aria-valuemin": 0,
+      "aria-valuemax": 100,
+      "aria-valuenow": Math.round(pct * 100),
+      role: "progressbar"
+    },
+    /* @__PURE__ */ import_react6.default.createElement(
+      "div",
+      {
+        style: {
+          width: `${pct * 100}%`,
+          height: "100%",
+          background: "linear-gradient(90deg, rgba(42,114,255,1), rgba(94,210,255,1))",
+          transition: "width 260ms ease"
+        }
+      }
+    )
+  );
+}
+var import_react6;
+var init_ProgressBar = __esm({
+  "src/components/ProgressBar.jsx"() {
+    import_react6 = __toESM(require_react());
+  }
+});
+
+// src/App.jsx
+function App() {
+  const [specs, setSpecs] = (0, import_react7.useState)({});
+  const [presets, setPresets] = (0, import_react7.useState)({});
+  const [selectedPreset, setSelectedPreset] = (0, import_react7.useState)(null);
+  const [params, setParams] = (0, import_react7.useState)({});
+  const [file, setFile] = (0, import_react7.useState)(null);
+  const [jobId, setJobId] = (0, import_react7.useState)(null);
+  const [progress, setProgress] = (0, import_react7.useState)(0);
+  const [statusMsg, setStatusMsg] = (0, import_react7.useState)("");
+  const [state, setState] = (0, import_react7.useState)("idle");
+  const [previewUrl, setPreviewUrl] = (0, import_react7.useState)(null);
+  const [resultUrl, setResultUrl] = (0, import_react7.useState)(null);
+  const inputUrlRef = (0, import_react7.useRef)(null);
+  (0, import_react7.useEffect)(() => {
+    let mounted = true;
+    (async () => {
+      try {
+        const [s, p] = await Promise.all([getParamSpec(), getPresets()]);
+        if (!mounted) return;
+        setSpecs(s || {});
+        setPresets(p || {});
+        const presetNames = Object.keys(p || {});
+        if (presetNames.length && !selectedPreset) {
+          setSelectedPreset(presetNames[0]);
+          const defaults = Object.fromEntries(
+            Object.entries(s || {}).map(([k, v]) => [k, v.default])
+          );
+          setParams({ ...defaults, ...p[presetNames[0]] || {} });
+        } else if (!selectedPreset) {
+          const defaults = Object.fromEntries(
+            Object.entries(s || {}).map(([k, v]) => [k, v.default])
+          );
+          setParams(defaults);
+        }
+      } catch {
+      }
+    })();
+    return () => {
+      mounted = false;
+    };
+  }, []);
+  (0, import_react7.useEffect)(() => {
+    if (inputUrlRef.current) {
+      URL.revokeObjectURL(inputUrlRef.current);
+      inputUrlRef.current = null;
+    }
+    if (file) {
+      inputUrlRef.current = URL.createObjectURL(file);
+    }
+    return () => {
+      if (inputUrlRef.current) {
+        URL.revokeObjectURL(inputUrlRef.current);
+        inputUrlRef.current = null;
+      }
+    };
+  }, [file]);
+  (0, import_react7.useEffect)(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (resultUrl) URL.revokeObjectURL(resultUrl);
+    };
+  }, [previewUrl, resultUrl]);
+  const canStart = (0, import_react7.useMemo)(() => !!file && state !== "running", [file, state]);
+  async function handleStartPreview() {
+    if (!file) return;
+    try {
+      setState("running");
+      setStatusMsg("Generating preview\u2026");
+      setProgress(0.02);
+      const blob = await runPreview(file, { ...params, fast: 2 });
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl(url);
+      setProgress(0.3);
+      setStatusMsg("Preview ready.");
+      setState("idle");
+    } catch (e) {
+      setState("error");
+      setStatusMsg(String(e?.message || e || "Preview failed"));
+    }
+  }
+  async function handleStartJob() {
+    if (!file) return;
+    try {
+      setState("queued");
+      setProgress(0);
+      setStatusMsg("Uploading\u2026");
+      const resp = await createJob(file, params, selectedPreset || void 0);
+      const id = resp?.job_id;
+      setJobId(id);
+      setStatusMsg("Queued.");
+      pollUntilDone(id);
+    } catch (e) {
+      setState("error");
+      setStatusMsg(String(e?.message || e || "Job failed to start"));
+    }
+  }
+  function pollUntilDone(id) {
+    let timer = null;
+    const tick = async () => {
+      try {
+        const st = await getJobStatus(id);
+        if (!st) return;
+        setState(st.state || "unknown");
+        setProgress(typeof st.progress === "number" ? st.progress : 0);
+        setStatusMsg(st.message || st.state);
+        if (st.state === "finished") {
+          clearInterval(timer);
+          setProgress(1);
+          setStatusMsg("Fetching result\u2026");
+          const blob = await fetchJobResultBlob(id);
+          if (resultUrl) URL.revokeObjectURL(resultUrl);
+          const url = URL.createObjectURL(blob);
+          setResultUrl(url);
+          setStatusMsg("Complete.");
+          setState("finished");
+        } else if (st.state === "error") {
+          clearInterval(timer);
+          setState("error");
+        }
+      } catch {
+      }
+    };
+    timer = setInterval(tick, POLL_MS);
+    tick();
+  }
+  function handlePresetChange(name) {
+    setSelectedPreset(name);
+    const defaults = Object.fromEntries(
+      Object.entries(specs || {}).map(([k, v]) => [k, v.default])
+    );
+    setParams({ ...defaults, ...presets[name] || {} });
+  }
+  function handleParamChange(next) {
+    setParams((prev) => ({ ...prev, ...next }));
+  }
+  function handleNewFile(f) {
+    setFile(f || null);
+    setPreviewUrl((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return null;
+    });
+    setResultUrl((old) => {
+      if (old) URL.revokeObjectURL(old);
+      return null;
+    });
+    setState("idle");
+    setProgress(0);
+    setStatusMsg("");
+  }
+  return /* @__PURE__ */ import_react7.default.createElement("div", { className: "app-root" }, /* @__PURE__ */ import_react7.default.createElement("header", { className: "app-header" }, /* @__PURE__ */ import_react7.default.createElement("h1", null, "desolidify-web"), /* @__PURE__ */ import_react7.default.createElement("div", { className: "header-actions" }, /* @__PURE__ */ import_react7.default.createElement("a", { href: "/", className: "link-muted" }, "Reset"))), /* @__PURE__ */ import_react7.default.createElement("main", { className: "app-main" }, /* @__PURE__ */ import_react7.default.createElement("section", { className: "left-panel" }, /* @__PURE__ */ import_react7.default.createElement(
+    UploadPanel,
+    {
+      file,
+      onFileSelected: handleNewFile,
+      onStartPreview: handleStartPreview,
+      onStartJob: handleStartJob,
+      disabled: !file
+    }
+  ), /* @__PURE__ */ import_react7.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react7.default.createElement("h3", { className: "card-title" }, "Preset"), /* @__PURE__ */ import_react7.default.createElement(
+    PresetSelect,
+    {
+      presets,
+      value: selectedPreset,
+      onChange: handlePresetChange
+    }
+  )), /* @__PURE__ */ import_react7.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react7.default.createElement("h3", { className: "card-title" }, "Parameters"), /* @__PURE__ */ import_react7.default.createElement(
+    ParamSliders,
+    {
+      specs,
+      values: params,
+      onChange: handleParamChange
+    }
+  )), /* @__PURE__ */ import_react7.default.createElement("div", { className: "card" }, /* @__PURE__ */ import_react7.default.createElement("h3", { className: "card-title" }, "Progress"), /* @__PURE__ */ import_react7.default.createElement(ProgressBar, { value: progress }), /* @__PURE__ */ import_react7.default.createElement("div", { className: `status ${state}` }, statusMsg || "\u2014"))), /* @__PURE__ */ import_react7.default.createElement("section", { className: "right-panel" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "viewer-grid" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "viewer-card" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "viewer-title" }, "Input"), /* @__PURE__ */ import_react7.default.createElement(Preview3D, { beforeUrl: inputUrlRef.current, afterUrl: null })), /* @__PURE__ */ import_react7.default.createElement("div", { className: "viewer-card" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "viewer-title" }, "Preview"), /* @__PURE__ */ import_react7.default.createElement(Preview3D, { beforeUrl: null, afterUrl: previewUrl })), /* @__PURE__ */ import_react7.default.createElement("div", { className: "viewer-card" }, /* @__PURE__ */ import_react7.default.createElement("div", { className: "viewer-title" }, "Result"), /* @__PURE__ */ import_react7.default.createElement(Preview3D, { beforeUrl: null, afterUrl: resultUrl }))))), /* @__PURE__ */ import_react7.default.createElement("footer", { className: "app-footer" }, /* @__PURE__ */ import_react7.default.createElement("span", null, "\xA9 ", (/* @__PURE__ */ new Date()).getFullYear(), " desolidify-web"), /* @__PURE__ */ import_react7.default.createElement("span", { className: "dot" }, "\u2022"), /* @__PURE__ */ import_react7.default.createElement("span", null, "Local runtime")));
+}
+var import_react7, POLL_MS;
 var init_App = __esm({
   "src/App.jsx"() {
-    import_react = __toESM(require_react());
+    import_react7 = __toESM(require_react());
+    init_api();
+    init_UploadPanel();
+    init_PresetSelect();
+    init_ParamSliders();
+    init_Preview3D();
+    init_ProgressBar();
+    POLL_MS = 1200;
   }
 });
 
 // src/index.jsx
 var require_index = __commonJS({
   "src/index.jsx"() {
-    var import_react2 = __toESM(require_react());
+    var import_react8 = __toESM(require_react());
     var import_client = __toESM(require_client());
     init_App();
     var root = import_client.default.createRoot(document.getElementById("root"));
-    root.render(/* @__PURE__ */ import_react2.default.createElement(App, null));
+    root.render(/* @__PURE__ */ import_react8.default.createElement(App, null));
   }
 });
 export default require_index();
