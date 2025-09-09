@@ -3,6 +3,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Mapping
 
+from backend.desolidify_engine.settings import _clamp
+
 # UI/Server param specification (authoritative ranges + tips)
 PARAM_SPECS: Dict[str, Dict[str, Any]] = {
     "spacing":     {"type": "number",  "min": 8.0,  "max": 30.0,  "step": 0.1,
@@ -40,7 +42,6 @@ PARAM_SPECS: Dict[str, Dict[str, Any]] = {
 
 # -----------------------------------------------------------------------------
 # Validation & coercion helpers (server-side clamp)
-# TODO: Once backend/desolidify_engine/settings.py exists, delegate clamp there.
 # -----------------------------------------------------------------------------
 
 _NUMERIC_KEYS = {
@@ -50,14 +51,6 @@ _NUMERIC_KEYS = {
 _INT_KEYS = {"fast", "chunk", "mem_tries"}
 _BOOL_KEYS = {"stagger"}
 _SELECT_KEYS = {"orientations", "grid_align"}
-
-
-def _clamp(v: float, lo: float | None, hi: float | None) -> float:
-    if lo is not None and v < lo:
-        v = lo
-    if hi is not None and v > hi:
-        v = hi
-    return v
 
 
 def _default_for(key: str):
