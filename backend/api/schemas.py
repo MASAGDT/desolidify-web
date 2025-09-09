@@ -107,13 +107,13 @@ def coerce_and_clamp_params(
                     vv = float(v)
                 except Exception:
                     vv = float(_default_for(k))
-                out[k] = _clamp(vv, spec.get("min"), spec.get("max"))
+                out[k] = _clamp(vv, **spec)
         elif k in _INT_KEYS:
             try:
                 vv = int(v)
             except Exception:
                 vv = int(_default_for(k))
-            out[k] = int(_clamp(vv, spec.get("min"), spec.get("max")))
+            out[k] = int(_clamp(vv, **spec))
         elif k in _BOOL_KEYS:
             out[k] = bool(v)
         elif k in _SELECT_KEYS:
@@ -130,7 +130,7 @@ def coerce_and_clamp_params(
         spacing = float(out.get("spacing", _default_for("spacing")) or 0.0)
         min_spacing = max(spacing, 2.0 * radius + shell_band)
         if spacing < min_spacing:
-            out["spacing"] = _clamp(min_spacing, PARAM_SPECS["spacing"]["min"], PARAM_SPECS["spacing"]["max"])
+            out["spacing"] = _clamp(min_spacing, **PARAM_SPECS["spacing"])
     except Exception:
         pass
 
