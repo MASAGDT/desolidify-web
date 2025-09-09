@@ -165,6 +165,7 @@ def register_job_routes(bp):
             stl_bytes = run_preview_bytes(data, params)
             return current_app.response_class(stl_bytes, mimetype="model/stl")
         except Exception as e:
+            current_app.logger.exception("Preview failed")
             return api_error(500, f"Preview failed: {e}")
 
 

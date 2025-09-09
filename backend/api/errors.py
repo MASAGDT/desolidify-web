@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import Any, Dict
 from flask import Flask, jsonify
 from werkzeug.exceptions import HTTPException
+import logging
 
 
 class ApiError(Exception):
@@ -19,6 +20,7 @@ def api_error(status_code: int, message: str, payload: Dict[str, Any] | None = N
 
 
 def register_error_handlers(app: Flask) -> None:
+    logger = logging.getLogger(__name__)
     @app.errorhandler(ApiError)
     def _handle_api_error(err: ApiError):
         resp = {"error": err.message, **(err.payload or {})}
@@ -31,6 +33,6 @@ def register_error_handlers(app: Flask) -> None:
 
     @app.errorhandler(Exception)
     def _handle_unexpected(err: Exception):
-        # TODO: add logging
+        logger.exception("Unhandled exception")
         resp = {"error": "Internal Server Error"}
         return jsonify(resp), 500
