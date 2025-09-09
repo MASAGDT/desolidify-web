@@ -10,15 +10,16 @@
     <meta name="theme-color" content="#0c0c0d" />
     <title>desolidify-web</title>
 
-    <!-- App Styles -->
+    <!-- App Styles (built file expected at /assets/styles.css) -->
     <link rel="stylesheet" href="/assets/styles.css" />
 
-    <!-- Preload vendor modules -->
+    <!-- Performance hints for vendor modules -->
     <link rel="modulepreload" href="/vendor/three/three.module.js" />
     <link rel="modulepreload" href="/vendor/three/STLLoader.js" />
 
-    <!-- Favicon / Manifest -->
+    <!-- Favicon / Manifest (optional) -->
     <link rel="icon" href="data:," />
+    <!-- TODO: add real favicon and manifest.json -->
   </head>
   <body>
     <noscript>This application requires JavaScript to run.</noscript>
@@ -26,15 +27,18 @@
     <div id="root"></div>
 
     <script>
-      // Global runtime configuration for the frontend
+      // Global runtime configuration for the frontend.
+      // The React app will read from window.__DESOLIDIFY__.
       window.__DESOLIDIFY__ = {
         apiBase: "/api",
         wsNamespace: "/",
+        // Socket.IO room prefix used by backend: "job:<id>"
         wsRoomPrefix: "job:",
       };
     </script>
 
-    <!-- ESM build (browser-native modules) -->
+    <!-- Application entry (built file expected at /assets/app.js) -->
+    <!-- TODO: The Frontend Core step will provide the React app; ensure your build outputs to /frontend/public/assets/app.js -->
     <script type="module" src="/assets/app.js"></script>
   </body>
 </html>
