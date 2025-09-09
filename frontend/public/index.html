@@ -1,0 +1,40 @@
+<!-- frontend/public/index.html -->
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover"
+    />
+    <meta name="theme-color" content="#0c0c0d" />
+    <title>desolidify-web</title>
+
+    <!-- App Styles -->
+    <link rel="stylesheet" href="/assets/styles.css" />
+
+    <!-- Preload vendor modules -->
+    <link rel="modulepreload" href="/vendor/three/three.module.js" />
+    <link rel="modulepreload" href="/vendor/three/STLLoader.js" />
+
+    <!-- Favicon / Manifest -->
+    <link rel="icon" href="data:," />
+  </head>
+  <body>
+    <noscript>This application requires JavaScript to run.</noscript>
+
+    <div id="root"></div>
+
+    <script>
+      // Global runtime configuration for the frontend
+      window.__DESOLIDIFY__ = {
+        apiBase: "/api",
+        wsNamespace: "/",
+        wsRoomPrefix: "job:",
+      };
+    </script>
+
+    <!-- ESM build (browser-native modules) -->
+    <script type="module" src="/assets/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "desolidify-web",
+  "version": "1.0.0",
+  "description": "Flask + React web app for SDF-based lattice perforation of STL models.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  }
+}
