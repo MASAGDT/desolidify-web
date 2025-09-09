@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import logging
 from pathlib import Path
 from typing import Optional
 
@@ -34,6 +35,9 @@ def create_app(config_object: str | None = None) -> Flask:
     else:
         # Resolves DESOLIDIFY_CONFIG or falls back to Config
         load_config_from_env(app, default=Config)
+
+    # Basic logging configuration
+    logging.basicConfig(level=app.config.get("LOG_LEVEL", "INFO"))
 
     # Enable CORS (dev-friendly defaults; override via env)
     CORS(
@@ -126,9 +130,11 @@ def _register_error_handlers(app: Flask) -> None:
 def _register_frontend_routes(app: Flask) -> None:
     project_root = Path(__file__).resolve().parents[1]
     public_dir = (project_root / "frontend" / "public").resolve()
+    assets_dir = (public_dir / "assets").resolve()
     vendor_dir = (project_root / "frontend" / "vendor").resolve()
 
     app.config.setdefault("FRONTEND_PUBLIC", str(public_dir))
+    app.config.setdefault("FRONTEND_ASSETS", str(assets_dir))
     app.config.setdefault("FRONTEND_VENDOR", str(vendor_dir))
 
     @app.get("/")
@@ -137,7 +143,7 @@ def _register_frontend_routes(app: Flask) -> None:
 
     @app.get("/assets/<path:path>")
     def assets(path: str):
-        return send_from_directory(app.config["FRONTEND_PUBLIC"], path)
+        return send_from_directory(app.config["FRONTEND_ASSETS"], path)
 
     @app.get("/vendor/<path:path>")
     def vendor(path: str):
