@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import os
+import logging
 from pathlib import Path
 from typing import Optional
 
@@ -34,6 +35,9 @@ def create_app(config_object: str | None = None) -> Flask:
     else:
         # Resolves DESOLIDIFY_CONFIG or falls back to Config
         load_config_from_env(app, default=Config)
+
+    # Basic logging configuration
+    logging.basicConfig(level=app.config.get("LOG_LEVEL", "INFO"))
 
     # Enable CORS (dev-friendly defaults; override via env)
     CORS(

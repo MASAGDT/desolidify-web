@@ -59,7 +59,16 @@ _PARAM_RANGES = {
 }
 
 
-def _clamp(v, lo=None, hi=None):
+def _clamp(v, lo=None, hi=None, **kwargs):
+    """Clamp *v* between lower/upper bounds.
+
+    Accepts either positional ``lo``/``hi`` or ``min``/``max`` via kwargs so
+    callers can unpack dictionaries with those keys (as our PARAM_RANGES does).
+    """
+    if lo is None:
+        lo = kwargs.get("min")
+    if hi is None:
+        hi = kwargs.get("max")
     if lo is not None and v < lo:
         v = lo
     if hi is not None and v > hi:
