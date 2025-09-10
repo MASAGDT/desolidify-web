@@ -1,2 +1,0 @@
-[2025-09-09 17:15:54] Task 9fa0e7a0-81c1-4557-9ece-0aa97d291bdf started
-[2025-09-09 17:15:54] Task failed: _clamp() got an unexpected keyword argument 'min'
