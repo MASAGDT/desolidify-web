@@ -42,7 +42,7 @@ def register_job_routes(bp):
         # Create a new job folder & save artifacts via storage service
         try:
             # Lazy import to avoid hard dependency before services are scaffolded
-            from ..services.storage import new_job, save_upload, write_params, set_status  # type: ignore
+            from backend.services.storage import new_job, save_upload, write_params, set_status  # type: ignore
         except Exception:
             return api_error(503, "Storage service not ready (scaffold phase)")
 
@@ -56,7 +56,7 @@ def register_job_routes(bp):
         try:
             # Try to import real presets; fallback to built-ins if engine not present yet
             try:
-                from ..desolidify_engine.presets import PRESETS_DEFAULT  # type: ignore
+                from backend.desolidify_engine.presets import PRESETS_DEFAULT  # type: ignore
             except Exception:
                 PRESETS_DEFAULT = _fallback_presets()
             params = coerce_and_clamp_params(raw_params, preset_name=preset_name, presets=PRESETS_DEFAULT)
@@ -66,7 +66,7 @@ def register_job_routes(bp):
 
         # Queue the work
         try:
-            from ..services.queue import submit_perforate  # type: ignore
+            from backend.services.queue import submit_perforate  # type: ignore
         except Exception:
             # Mark as queued but not actually submitted (scaffold phase)
             set_status(job_id, state="queued", progress=0.0, message="Queue not available yet.")
@@ -92,7 +92,7 @@ def register_job_routes(bp):
     @bp.get("/jobs/<job_id>")
     def get_job(job_id: str):
         try:
-            from ..services.storage import get_status  # type: ignore
+            from backend.services.storage import get_status  # type: ignore
         except Exception:
             return jsonify({"job_id": job_id, "state": "unknown", "progress": 0.0, "message": "Storage not ready"}), 503
 
@@ -112,7 +112,7 @@ def register_job_routes(bp):
         if not out_path.exists():
             # Not ready yet
             try:
-                from ..services.storage import get_status  # type: ignore
+                from backend.services.storage import get_status  # type: ignore
                 st = get_status(job_id) or {}
             except Exception:
                 st = {}
@@ -146,7 +146,7 @@ def register_job_routes(bp):
         # Clamp params
         try:
             try:
-                from ..desolidify_engine.presets import PRESETS_DEFAULT  # type: ignore
+                from backend.desolidify_engine.presets import PRESETS_DEFAULT  # type: ignore
             except Exception:
                 PRESETS_DEFAULT = _fallback_presets()
             params = coerce_and_clamp_params(raw_params, preset_name=preset_name, presets=PRESETS_DEFAULT, force_fast=2)
@@ -156,7 +156,7 @@ def register_job_routes(bp):
         # Run preview (in-process, coarse)
         try:
             # Lazy import preview helper (to be provided in backend/desolidify_engine/preview.py)
-            from ..desolidify_engine.preview import run_preview_bytes  # type: ignore
+            from backend.desolidify_engine.preview import run_preview_bytes  # type: ignore
         except Exception:
             return api_error(501, "Preview engine not available yet (scaffold phase).")
 

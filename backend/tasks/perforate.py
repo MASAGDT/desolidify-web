@@ -5,7 +5,7 @@ import io
 from pathlib import Path
 from typing import Any, Dict, Optional, Callable
 
-from ..services.storage import (
+from backend.services.storage import (
     job_dir,
     read_params,
     write_params,
@@ -13,9 +13,9 @@ from ..services.storage import (
     set_status,
     write_result,
 )
-from ..services.progress import set_progress as _set_progress
-from ..desolidify_engine.settings import from_params, clamp_settings
-from ..desolidify_engine.engine import perforate_mesh_sdf, load_mesh_any
+from backend.services.progress import set_progress as _set_progress
+from backend.desolidify_engine.settings import from_params, clamp_settings
+from backend.desolidify_engine.engine import perforate_mesh_sdf, load_mesh_any
 
 
 def _progress_cb(job_id: str) -> Callable[[float], None]:

@@ -3,6 +3,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, asdict
 from typing import Any, Dict, Optional
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -65,6 +68,7 @@ def _clamp(v, lo=None, hi=None, *, min=None, max=None, **kwargs):
     Supports both positional (lo, hi) and keyword (min=..., max=...) styles,
     so callers can unpack dictionaries with either key format.
     """
+    logger.debug("Executing %s._clamp lo=%r hi=%r min=%r max=%r extra=%r", __name__, lo, hi, min, max, kwargs)
     if lo is None:
         lo = min if min is not None else kwargs.get("min")
     if hi is None:
