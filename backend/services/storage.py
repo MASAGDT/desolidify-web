@@ -93,6 +93,10 @@ def save_upload(job_id: str, file_storage, *, filename_hint: str = "input.stl") 
     in_path = d / "input.stl"
     # werkzeug FileStorage has .save()
     file_storage.save(str(in_path))
+    try:
+        file_storage.close()
+    except Exception:
+        pass
     # Save original filename
     meta = {"filename": filename_hint, "uploaded_at": int(time.time())}
     _atomic_write_json(d / "upload.json", meta)
