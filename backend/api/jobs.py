@@ -35,21 +35,28 @@ def register_job_routes(bp):
             try:
                 raw_params = json.loads(request.form["params"])
             except Exception:
+                current_app.logger.exception("Invalid JSON in 'params'")
                 return api_error(400, "Invalid JSON in 'params'")
 
         preset_name = request.form.get("preset") or None
+
+        current_app.logger.info(
+            "create_job filename=%s preset=%s params=%s", filename, preset_name, raw_params
+        )
 
         # Create a new job folder & save artifacts via storage service
         try:
             # Lazy import to avoid hard dependency before services are scaffolded
             from ..services.storage import new_job, save_upload, write_params, set_status  # type: ignore
         except Exception:
+            current_app.logger.exception("Storage service not ready")
             return api_error(503, "Storage service not ready (scaffold phase)")
 
         job_id = new_job()
         try:
             save_upload(job_id, f, filename_hint=filename)
         except Exception as e:
+            current_app.logger.exception("Failed to store upload for job %s", job_id)
             return api_error(500, f"Failed to store upload: {e}")
 
         # Resolve presets (optional) and clamp parameters
@@ -62,17 +69,23 @@ def register_job_routes(bp):
             params = coerce_and_clamp_params(raw_params, preset_name=preset_name, presets=PRESETS_DEFAULT)
             write_params(job_id, params)
         except Exception as e:
+            current_app.logger.exception("Invalid parameters for job %s", job_id)
             return api_error(400, f"Invalid parameters: {e}")
 
         # Queue the work
         try:
             from ..services.queue import submit_perforate  # type: ignore
         except Exception:
+            current_app.logger.exception("Queue service not ready")
             # Mark as queued but not actually submitted (scaffold phase)
             set_status(job_id, state="queued", progress=0.0, message="Queue not available yet.")
             task_id = None
         else:
-            task_id = submit_perforate(job_id, params)
+            try:
+                task_id = submit_perforate(job_id, params)
+            except Exception as e:
+                current_app.logger.exception("submit_perforate failed for job %s", job_id)
+                return api_error(500, f"Failed to queue job: {e}")
 
         set_status(job_id, state="queued", progress=0.0, message="Job enqueued.")
 
@@ -139,9 +152,14 @@ def register_job_routes(bp):
             try:
                 raw_params = json.loads(request.form["params"])
             except Exception:
+                current_app.logger.exception("Invalid JSON in 'params'")
                 return api_error(400, "Invalid JSON in 'params'")
 
         preset_name = request.form.get("preset") or None
+
+        current_app.logger.info(
+            "preview_job filename=%s preset=%s params=%s", filename, preset_name, raw_params
+        )
 
         # Clamp params
         try:
@@ -151,6 +169,7 @@ def register_job_routes(bp):
                 PRESETS_DEFAULT = _fallback_presets()
             params = coerce_and_clamp_params(raw_params, preset_name=preset_name, presets=PRESETS_DEFAULT, force_fast=2)
         except Exception as e:
+            current_app.logger.exception("Invalid parameters for preview")
             return api_error(400, f"Invalid parameters: {e}")
 
         # Run preview (in-process, coarse)
@@ -158,6 +177,7 @@ def register_job_routes(bp):
             # Lazy import preview helper (to be provided in backend/desolidify_engine/preview.py)
             from ..desolidify_engine.preview import run_preview_bytes  # type: ignore
         except Exception:
+            current_app.logger.exception("Preview engine import failed")
             return api_error(501, "Preview engine not available yet (scaffold phase).")
 
         try:
