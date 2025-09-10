@@ -79,6 +79,10 @@ export async function runPreview(file, params = {}) {
   return res.blob();
 }
 
+export async function cancelAllJobs() {
+  return jsonFetch("/jobs", { method: "DELETE" });
+}
+
 // TODO: optional: Socket.IO hookup when server join-room handler is available.
 // import { io } from "socket.io-client";
 // export function connectProgress(jobId, onProgress) {

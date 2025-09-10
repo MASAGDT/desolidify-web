@@ -44,10 +44,27 @@ def register_job_routes(bp):
             "create_job filename=%s preset=%s params=%s", filename, preset_name, raw_params
         )
 
+        # Enforce simple concurrency limit
+        max_jobs = int(current_app.config.get("MAX_CONCURRENT_JOBS", 1))
+        try:
+            from backend.services.storage import list_statuses  # type: ignore
+            running = sum(
+                1 for _, st in list_statuses() if st.get("state") in {"queued", "running"}
+            )
+            if running >= max_jobs:
+                return api_error(429, "Too many concurrent jobs. Please wait for the current job to finish.")
+        except Exception:
+            current_app.logger.exception("Failed to check concurrent jobs")
+
         # Create a new job folder & save artifacts via storage service
         try:
             # Lazy import to avoid hard dependency before services are scaffolded
-            from backend.services.storage import new_job, save_upload, write_params, set_status  # type: ignore
+            from backend.services.storage import (
+                new_job,
+                save_upload,
+                write_params,
+                set_status,
+            )  # type: ignore
         except Exception:
             current_app.logger.exception("Storage service not ready")
             return api_error(503, "Storage service not ready (scaffold phase)")
@@ -132,6 +149,19 @@ def register_job_routes(bp):
             return jsonify({"job_id": job_id, "ready": False, **st}), 202
 
         return send_file(out_path, mimetype="model/stl", as_attachment=True, download_name=f"{job_id}_desolid.stl")
+
+    # -------------------------------------------------------------------------
+    # DELETE /api/jobs → remove all job folders
+    # -------------------------------------------------------------------------
+    @bp.delete("/jobs")
+    def delete_jobs():
+        try:
+            from backend.services.storage import purge_all_jobs  # type: ignore
+            deleted = purge_all_jobs()
+        except Exception:
+            current_app.logger.exception("Failed to purge jobs")
+            return api_error(500, "Failed to purge jobs")
+        return jsonify({"deleted": deleted})
 
     # -------------------------------------------------------------------------
     # POST /api/preview → quick coarse pass (returns STL)
