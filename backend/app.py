@@ -36,8 +36,19 @@ def create_app(config_object: str | None = None) -> Flask:
         # Resolves DESOLIDIFY_CONFIG or falls back to Config
         load_config_from_env(app, default=Config)
 
-    # Basic logging configuration
-    logging.basicConfig(level=app.config.get("LOG_LEVEL", "INFO"))
+    # Configure logging for app and root logger
+    log_level = app.config.get("LOG_LEVEL", "INFO")
+    formatter = logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+    handler = logging.StreamHandler()
+    handler.setFormatter(formatter)
+
+    root_logger = logging.getLogger()
+    root_logger.setLevel(log_level)
+    root_logger.handlers = [handler]
+
+    app.logger.setLevel(log_level)
+    app.logger.handlers = [handler]
+    app.logger.propagate = False
 
     # Enable CORS (dev-friendly defaults; override via env)
     CORS(
