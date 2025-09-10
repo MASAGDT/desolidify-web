@@ -67,16 +67,27 @@ export default function App() {
     };
   }, []);
 
-  // Maintain object URL for input STL
+  // Maintain object URL for input STL (copy into memory to avoid locking)
   useEffect(() => {
+    let canceled = false;
     if (inputUrlRef.current) {
       URL.revokeObjectURL(inputUrlRef.current);
       inputUrlRef.current = null;
     }
     if (file) {
-      inputUrlRef.current = URL.createObjectURL(file);
+      (async () => {
+        try {
+          const buf = await file.arrayBuffer();
+          if (canceled) return;
+          const blob = new Blob([buf], { type: file.type || "model/stl" });
+          inputUrlRef.current = URL.createObjectURL(blob);
+        } catch {
+          // ignore
+        }
+      })();
     }
     return () => {
+      canceled = true;
       if (inputUrlRef.current) {
         URL.revokeObjectURL(inputUrlRef.current);
         inputUrlRef.current = null;

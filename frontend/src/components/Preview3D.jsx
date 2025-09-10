@@ -28,8 +28,12 @@ export default function Preview3D({ beforeUrl = null, afterUrl = null }) {
     let mounted = true;
     (async () => {
       try {
-        const three = await import("/vendor/three/three.module.js");
-        const STL = await import("/vendor/three/STLLoader.js");
+        const three = await import(
+          "https://cdn.jsdelivr.net/npm/three@0.161.0/build/three.module.js"
+        );
+        const STL = await import(
+          "https://cdn.jsdelivr.net/npm/three@0.161.0/examples/jsm/loaders/STLLoader.js"
+        );
         if (!mounted) return;
         stateRef.current.three = three;
         stateRef.current.STLLoader = STL.STLLoader || STL.default?.STLLoader || STL.default || STL;
