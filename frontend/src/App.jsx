@@ -1,5 +1,5 @@
 // frontend/src/App.jsx
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   getParamSpec,
   getPresets,
@@ -7,6 +7,7 @@ import {
   getJobStatus,
   fetchJobResultBlob,
   runPreview,
+  cancelAllJobs,
 } from "./api";
 
 // Components
@@ -33,6 +34,7 @@ export default function App() {
   const [previewUrl, setPreviewUrl] = useState(null);
   const [resultUrl, setResultUrl] = useState(null);
   const inputUrlRef = useRef(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Load meta specs + presets
   useEffect(() => {
@@ -65,16 +67,27 @@ export default function App() {
     };
   }, []);
 
-  // Maintain object URL for input STL
+  // Maintain object URL for input STL (copy into memory to avoid locking)
   useEffect(() => {
+    let canceled = false;
     if (inputUrlRef.current) {
       URL.revokeObjectURL(inputUrlRef.current);
       inputUrlRef.current = null;
     }
     if (file) {
-      inputUrlRef.current = URL.createObjectURL(file);
+      (async () => {
+        try {
+          const buf = await file.arrayBuffer();
+          if (canceled) return;
+          const blob = new Blob([buf], { type: file.type || "model/stl" });
+          inputUrlRef.current = URL.createObjectURL(blob);
+        } catch {
+          // ignore
+        }
+      })();
     }
     return () => {
+      canceled = true;
       if (inputUrlRef.current) {
         URL.revokeObjectURL(inputUrlRef.current);
         inputUrlRef.current = null;
@@ -90,10 +103,9 @@ export default function App() {
     };
   }, [previewUrl, resultUrl]);
 
-  const canStart = useMemo(() => !!file && state !== "running", [file, state]);
-
   async function handleStartPreview() {
-    if (!file) return;
+    if (!file || isSubmitting) return;
+    setIsSubmitting(true);
     try {
       setState("running");
       setStatusMsg("Generating preview…");
@@ -108,11 +120,14 @@ export default function App() {
     } catch (e) {
       setState("error");
       setStatusMsg(String(e?.message || e || "Preview failed"));
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   async function handleStartJob() {
-    if (!file) return;
+    if (!file || isSubmitting) return;
+    setIsSubmitting(true);
     try {
       setState("queued");
       setProgress(0.0);
@@ -125,6 +140,8 @@ export default function App() {
     } catch (e) {
       setState("error");
       setStatusMsg(String(e?.message || e || "Job failed to start"));
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -187,12 +204,35 @@ export default function App() {
     setStatusMsg("");
   }
 
+  async function handleCancelJobs() {
+    try {
+      await cancelAllJobs();
+      setJobId(null);
+      setPreviewUrl((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return null;
+      });
+      setResultUrl((old) => {
+        if (old) URL.revokeObjectURL(old);
+        return null;
+      });
+      setState("idle");
+      setProgress(0);
+      setStatusMsg("Cancelled.");
+    } catch (e) {
+      setStatusMsg(String(e?.message || "Cancel failed"));
+    }
+  }
+
   return (
     <div className="app-root">
       <header className="app-header">
         <h1>desolidify-web</h1>
         <div className="header-actions">
           <a href="/" className="link-muted">Reset</a>
+          <button onClick={handleCancelJobs} className="link-muted" type="button">
+            Cancel Jobs
+          </button>
         </div>
       </header>
 
@@ -203,7 +243,7 @@ export default function App() {
             onFileSelected={handleNewFile}
             onStartPreview={handleStartPreview}
             onStartJob={handleStartJob}
-            disabled={!file}
+            disabled={!file || isSubmitting || state === "queued" || state === "running"}
           />
 
           <div className="card">
