@@ -1,6 +1,0 @@
-{
-  "state": "error",
-  "progress": 0.0,
-  "message": "_clamp() got an unexpected keyword argument 'min'",
-  "ts": 1757456154
-}

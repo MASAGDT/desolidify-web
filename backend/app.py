@@ -168,7 +168,7 @@ def _register_cli(app: Flask) -> None:
     def purge_jobs(hours: int):
         """Delete old job folders."""
         try:
-            from .services.storage import purge_old_jobs  # type: ignore
+            from backend.services.storage import purge_old_jobs  # type: ignore
             deleted = purge_old_jobs(hours=hours)
             click.echo(f"Deleted {deleted} old job(s).")
         except Exception as e:

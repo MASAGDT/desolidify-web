@@ -6,8 +6,8 @@ from typing import Any, Callable, Dict, Optional
 
 import trimesh
 
-from .settings import Settings, from_params, clamp_settings
-from .engine import perforate_mesh_sdf
+from backend.desolidify_engine.settings import Settings, from_params, clamp_settings
+from backend.desolidify_engine.engine import perforate_mesh_sdf
 
 
 def run_preview_mesh(mesh: trimesh.Trimesh, params: Dict[str, Any],
