@@ -11,7 +11,7 @@ import numpy as np
 import trimesh
 from skimage.measure import marching_cubes
 
-from .settings import Settings
+from backend.desolidify_engine.settings import Settings
 
 # -----------------------------------------------------------------------------
 # Mesh I/O

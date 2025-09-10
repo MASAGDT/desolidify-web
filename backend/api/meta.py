@@ -11,7 +11,7 @@ def register_meta_routes(bp):
     def get_presets():
         # Try loading from engine presets; fallback to inline subset
         try:
-            from ..desolidify_engine.presets import PRESETS_DEFAULT  # type: ignore
+            from backend.desolidify_engine.presets import PRESETS_DEFAULT  # type: ignore
             presets = PRESETS_DEFAULT
         except Exception:
             presets = _fallback_presets()

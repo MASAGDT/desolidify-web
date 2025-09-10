@@ -3,6 +3,9 @@ from __future__ import annotations
 
 from dataclasses import dataclass, asdict
 from typing import Any, Dict, Optional
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -59,21 +62,21 @@ _PARAM_RANGES = {
 }
 
 
-def _clamp(v, lo=None, hi=None, *, min=None, max=None, **kwargs):
-    """Clamp v between lower/upper bounds.
+def _clamp(v, *, min=None, max=None, **extra):
+    """Clamp ``v`` between ``min`` and ``max``.
 
-    Supports both positional (lo, hi) and keyword (min=..., max=...) styles,
-    so callers can unpack dictionaries with either key format.
+    ``PARAM_SPECS`` and ``_PARAM_RANGES`` dictionaries both express bounds as
+    ``{"min": ..., "max": ...}``.  ``extra`` absorbs any additional keys so
+    callers can pass entire spec dictionaries without pruning first.
     """
-    if lo is None:
-        lo = min if min is not None else kwargs.get("min")
-    if hi is None:
-        hi = max if max is not None else kwargs.get("max")
+    logger.debug(
+        "Executing %s._clamp min=%r max=%r extra=%r", __name__, min, max, extra
+    )
 
-    if lo is not None and v < lo:
-        v = lo
-    if hi is not None and v > hi:
-        v = hi
+    if min is not None and v < min:
+        v = min
+    if max is not None and v > max:
+        v = max
     return v
 
 
