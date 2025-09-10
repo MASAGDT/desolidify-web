@@ -78,6 +78,8 @@ export default function App() {
       setProgress(0.0);
       setStatusMsg("Uploading…");
       const resp = await createJob(file, params, selectedPreset || undefined);
+      // release the original file handle once it's been uploaded
+      setFile(null);
       const id = resp?.job_id;
       setJobId(id);
       setStatusMsg("Queued.");
