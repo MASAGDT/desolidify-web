@@ -40,6 +40,7 @@ class Config:
     # Queue / Workers
     QUEUE_BACKEND = os.getenv("QUEUE_BACKEND", "thread")  # 'thread' | 'celery'
     MAX_WORKERS = int(os.getenv("MAX_WORKERS", "1"))
+    MAX_CONCURRENT_JOBS = int(os.getenv("MAX_CONCURRENT_JOBS", "1"))
 
     # Retention
     JOB_RETENTION_HOURS = int(os.getenv("JOB_RETENTION_HOURS", "6"))

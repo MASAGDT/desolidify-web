@@ -9,7 +9,7 @@ import time
 import uuid
 from dataclasses import asdict, is_dataclass
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List, Tuple
 
 try:
     from flask import current_app
@@ -125,6 +125,18 @@ def get_status(job_id: str) -> Optional[Dict[str, Any]]:
     return _read_json(job_dir(job_id) / "status.json")
 
 
+def list_statuses() -> List[Tuple[str, Dict[str, Any]]]:
+    base = _base_dir()
+    out: List[Tuple[str, Dict[str, Any]]] = []
+    for child in base.iterdir():
+        if not child.is_dir():
+            continue
+        st = _read_json(child / "status.json")
+        if st:
+            out.append((child.name, st))
+    return out
+
+
 def write_log(job_id: str, line: str) -> None:
     p = job_dir(job_id) / "log.txt"
     p.parent.mkdir(parents=True, exist_ok=True)
@@ -180,3 +192,13 @@ def purge_old_jobs(*, hours: int) -> int:
             except Exception:
                 pass
     return deleted
+
+
+def purge_all_jobs() -> int:
+    base = _base_dir()
+    count = 0
+    for child in base.iterdir():
+        if child.is_dir():
+            shutil.rmtree(child, ignore_errors=True)
+            count += 1
+    return count
