@@ -9,15 +9,13 @@ from backend.api.schemas import coerce_and_clamp_params
 
 
 def test_clamp():
-    # lo/hi style
-    assert _clamp(5, lo=1, hi=10) == 5
-    assert _clamp(0, lo=1, hi=10) == 1
-    assert _clamp(15, lo=1, hi=10) == 10
-
-    # min/max style
     assert _clamp(5, min=1, max=10) == 5
     assert _clamp(0, min=1, max=10) == 1
     assert _clamp(15, min=1, max=10) == 10
+    assert _clamp(0, lo=1, hi=10) == 1
+    assert _clamp(15, lo=1, hi=10) == 10
+    # ignore unknown keys (mirrors PARAM_SPECS structure)
+    assert _clamp(5, min=1, max=10, tip="extra") == 5
 
 
 def test_coerce_and_clamp_params():

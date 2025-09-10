@@ -62,23 +62,27 @@ _PARAM_RANGES = {
 }
 
 
-def _clamp(v, lo=None, hi=None, *, min=None, max=None, **kwargs):
-    """Clamp v between lower/upper bounds.
+def _clamp(v, lo=None, hi=None, *, min=None, max=None, **extra):
+    """Clamp ``v`` between lower/upper bounds.
 
-    Supports both positional (lo, hi) and keyword (min=..., max=...) styles,
-    so callers can unpack dictionaries with either key format.
+    Supports both positional ``lo``/``hi`` and keyword ``min``/``max`` styles,
+    so callers can unpack spec dictionaries directly.  ``extra`` absorbs any
+    additional keys.
     """
-    logger.debug("Executing %s._clamp lo=%r hi=%r min=%r max=%r extra=%r", __name__, lo, hi, min, max, kwargs)
+    logger.debug(
+        "Executing %s._clamp lo=%r hi=%r min=%r max=%r extra=%r",
+        __name__, lo, hi, min, max, extra,
+    )
     if lo is None:
-        lo = min if min is not None else kwargs.get("min")
+        lo = min if min is not None else extra.get("min")
     if hi is None:
-        hi = max if max is not None else kwargs.get("max")
-
+        hi = max if max is not None else extra.get("max")
     if lo is not None and v < lo:
         v = lo
     if hi is not None and v > hi:
         v = hi
     return v
+
 
 
 
