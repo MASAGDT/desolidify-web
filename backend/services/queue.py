@@ -11,7 +11,7 @@ try:
 except Exception:  # pragma: no cover
     current_app = None  # type: ignore
 
-from .storage import set_status, write_log
+from .storage import get_status, set_status, write_log
 
 _executor_lock = threading.Lock()
 _executor: Optional[concurrent.futures.ThreadPoolExecutor] = None
@@ -61,7 +61,10 @@ def submit_perforate(job_id: str, params: Dict[str, Any]) -> str:
             set_status(job_id, state="error", progress=0.0, message=str(e))
         else:
             write_log(job_id, f"Task {task_id} finished")
-            set_status(job_id, state="finished", progress=1.0, message="Completed")
+            # Only mark finished if the task itself didn't already set a terminal state
+            st = get_status(job_id) or {}
+            if st.get("state") not in {"finished", "error"}:
+                set_status(job_id, state="finished", progress=1.0, message="Completed")
 
     exec_.submit(_run)
     return task_id
