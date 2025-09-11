@@ -1,15 +1,21 @@
 // frontend/src/components/UploadPanel.jsx
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback, useRef, useState, useEffect } from "react";
 
 export default function UploadPanel({
   file,
   onFileSelected,
-  onStartPreview,
   onStartJob,
   disabled,
 }) {
   const inputRef = useRef(null);
   const [dragOver, setDragOver] = useState(false);
+
+  // clear the native file input when no file is selected so the OS releases it
+  useEffect(() => {
+    if (!file && inputRef.current) {
+      inputRef.current.value = null;
+    }
+  }, [file]);
 
   const openPicker = useCallback(() => {
     inputRef.current?.click();
@@ -106,14 +112,6 @@ export default function UploadPanel({
           Remove
         </button>
         <div style={{ flex: 1 }} />
-        <button
-          className="btn"
-          onClick={onStartPreview}
-          disabled={!file || disabled}
-          type="button"
-        >
-          Preview
-        </button>
         <button
           className="btn primary"
           onClick={onStartJob}

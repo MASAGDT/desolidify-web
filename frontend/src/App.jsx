@@ -1,12 +1,11 @@
 // frontend/src/App.jsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getParamSpec,
   getPresets,
   createJob,
   getJobStatus,
   fetchJobResultBlob,
-  runPreview,
   cancelAllJobs,
 } from "./api";
 
@@ -14,7 +13,6 @@ import {
 import UploadPanel from "./components/UploadPanel.jsx";
 import PresetSelect from "./components/PresetSelect.jsx";
 import ParamSliders from "./components/ParamSliders.jsx";
-import Preview3D from "./components/Preview3D.jsx";
 import ProgressBar from "./components/ProgressBar.jsx";
 
 const POLL_MS = 1200;
@@ -31,9 +29,7 @@ export default function App() {
   const [statusMsg, setStatusMsg] = useState("");
   const [state, setState] = useState("idle"); // idle|queued|running|finished|error
 
-  const [previewUrl, setPreviewUrl] = useState(null);
   const [resultUrl, setResultUrl] = useState(null);
-  const inputUrlRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Load meta specs + presets
@@ -67,63 +63,12 @@ export default function App() {
     };
   }, []);
 
-  // Maintain object URL for input STL (copy into memory to avoid locking)
-  useEffect(() => {
-    let canceled = false;
-    if (inputUrlRef.current) {
-      URL.revokeObjectURL(inputUrlRef.current);
-      inputUrlRef.current = null;
-    }
-    if (file) {
-      (async () => {
-        try {
-          const buf = await file.arrayBuffer();
-          if (canceled) return;
-          const blob = new Blob([buf], { type: file.type || "model/stl" });
-          inputUrlRef.current = URL.createObjectURL(blob);
-        } catch {
-          // ignore
-        }
-      })();
-    }
-    return () => {
-      canceled = true;
-      if (inputUrlRef.current) {
-        URL.revokeObjectURL(inputUrlRef.current);
-        inputUrlRef.current = null;
-      }
-    };
-  }, [file]);
-
-  // Cleanup preview/result URLs on unmount
+  // Cleanup result URL on unmount
   useEffect(() => {
     return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
       if (resultUrl) URL.revokeObjectURL(resultUrl);
     };
-  }, [previewUrl, resultUrl]);
-
-  async function handleStartPreview() {
-    if (!file || isSubmitting) return;
-    setIsSubmitting(true);
-    try {
-      setState("running");
-      setStatusMsg("Generating preview…");
-      setProgress(0.02);
-      const blob = await runPreview(file, { ...params, fast: 2 });
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      const url = URL.createObjectURL(blob);
-      setPreviewUrl(url);
-      setProgress(0.3);
-      setStatusMsg("Preview ready.");
-      setState("idle");
-    } catch (e) {
-      setState("error");
-      setStatusMsg(String(e?.message || e || "Preview failed"));
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  }, [resultUrl]);
 
   async function handleStartJob() {
     if (!file || isSubmitting) return;
@@ -133,6 +78,8 @@ export default function App() {
       setProgress(0.0);
       setStatusMsg("Uploading…");
       const resp = await createJob(file, params, selectedPreset || undefined);
+      // release the original file handle once it's been uploaded
+      setFile(null);
       const id = resp?.job_id;
       setJobId(id);
       setStatusMsg("Queued.");
@@ -191,10 +138,6 @@ export default function App() {
 
   function handleNewFile(f) {
     setFile(f || null);
-    setPreviewUrl((old) => {
-      if (old) URL.revokeObjectURL(old);
-      return null;
-    });
     setResultUrl((old) => {
       if (old) URL.revokeObjectURL(old);
       return null;
@@ -208,10 +151,6 @@ export default function App() {
     try {
       await cancelAllJobs();
       setJobId(null);
-      setPreviewUrl((old) => {
-        if (old) URL.revokeObjectURL(old);
-        return null;
-      });
       setResultUrl((old) => {
         if (old) URL.revokeObjectURL(old);
         return null;
@@ -241,7 +180,6 @@ export default function App() {
           <UploadPanel
             file={file}
             onFileSelected={handleNewFile}
-            onStartPreview={handleStartPreview}
             onStartJob={handleStartJob}
             disabled={!file || isSubmitting || state === "queued" || state === "running"}
           />
@@ -272,19 +210,17 @@ export default function App() {
         </section>
 
         <section className="right-panel">
-          <div className="viewer-grid">
-            <div className="viewer-card">
-              <div className="viewer-title">Input</div>
-              <Preview3D beforeUrl={inputUrlRef.current} afterUrl={null} />
-            </div>
-            <div className="viewer-card">
-              <div className="viewer-title">Preview</div>
-              <Preview3D beforeUrl={null} afterUrl={previewUrl} />
-            </div>
-            <div className="viewer-card">
-              <div className="viewer-title">Result</div>
-              <Preview3D beforeUrl={null} afterUrl={resultUrl} />
-            </div>
+          <div className="card">
+            <h3 className="card-title">Result</h3>
+            {resultUrl ? (
+              <a href={resultUrl} download="result.stl" className="btn">
+                Download STL
+              </a>
+            ) : (
+              <div style={{ color: "var(--muted)", fontSize: 12 }}>
+                No result available.
+              </div>
+            )}
           </div>
         </section>
       </main>
