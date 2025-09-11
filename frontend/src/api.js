@@ -63,22 +63,6 @@ export async function fetchJobResultBlob(jobId) {
   return res.blob();
 }
 
-export async function runPreview(file, params = {}) {
-  const fd = new FormData();
-  fd.append("file", file, file?.name || "model.stl");
-  fd.append("params", JSON.stringify({ ...params, fast: 2 }));
-  const res = await fetch(`${API_BASE}/preview`, { method: "POST", body: fd });
-  if (!res.ok) {
-    let msg = `HTTP ${res.status}`;
-    try {
-      const j = await res.json();
-      msg = j?.error || msg;
-    } catch {}
-    throw new Error(msg);
-  }
-  return res.blob();
-}
-
 export async function cancelAllJobs() {
   return jsonFetch("/jobs", { method: "DELETE" });
 }

@@ -42,13 +42,43 @@ def job_dir(job_id: str) -> Path:
 
 
 def _atomic_write_bytes(path: Path, data: bytes) -> None:
+    """Write bytes to ``path`` atomically with retry semantics on Windows.
+
+    Windows refuses to replace a file that is currently open by *any* process,
+    including readers.  Status updates can therefore race with other threads
+    polling ``status.json`` and raise ``PermissionError``.  We work around this
+    by writing to a uniquely named temporary file and retrying the final
+    ``os.replace`` a few times before giving up.
+    """
+
     path.parent.mkdir(parents=True, exist_ok=True)
-    tmp = path.with_suffix(path.suffix + ".tmp")
-    with open(tmp, "wb") as f:
+
+    import tempfile
+
+    # Use a unique temp file in the same directory so replacement is atomic.
+    with tempfile.NamedTemporaryFile(dir=str(path.parent), prefix=path.name, delete=False) as f:
         f.write(data)
         f.flush()
         os.fsync(f.fileno())
-    os.replace(tmp, path)
+        tmp_path = Path(f.name)
+
+    # Attempt to replace the destination, tolerating transient locking
+    # from other processes on Windows.
+    try:
+        for attempt in range(5):
+            try:
+                os.replace(tmp_path, path)
+                break
+            except PermissionError:
+                if attempt == 4:
+                    raise
+                time.sleep(0.05 * (attempt + 1))
+    finally:
+        if tmp_path.exists():
+            try:
+                tmp_path.unlink()
+            except Exception:
+                pass
 
 
 def _atomic_write_text(path: Path, text: str) -> None:
@@ -93,6 +123,10 @@ def save_upload(job_id: str, file_storage, *, filename_hint: str = "input.stl") 
     in_path = d / "input.stl"
     # werkzeug FileStorage has .save()
     file_storage.save(str(in_path))
+    try:
+        file_storage.close()
+    except Exception:
+        pass
     # Save original filename
     meta = {"filename": filename_hint, "uploaded_at": int(time.time())}
     _atomic_write_json(d / "upload.json", meta)
